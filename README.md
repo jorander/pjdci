@@ -29,6 +29,24 @@ account for comparisons between role objects and role player objects. This is fu
 the 'RolePlayer' interface and the 'AbstractRolePlayer'.
 - Role definitions are implemented as classes (internal to the context) and us such requires a boiler-plate constructor.
 This is unfortunate, but non-complex.
+- Role player methods cannot be directly accessed via the role identifier. Due to role objects wrapping the role player
+the role player can only be accessed from within role methods. Therefore any methods called through the role identifier
+must be defined in the role. In their simplest form role methods might just delegate to the role player. This forces some
+extra delegation methods on the role, if needed in the context. Also this is unfortunate, but non-complex.
+- In some method calls, certainly all reaching outside the context, the role player type is needed rather than the role.
+In those cases it is necessary to implement a role conversion method, typically "as<Role player type>()" to return the role
+player. This is due to the static typing of Java, and a bit annoying, but easily detected since it is caught by the
+compiler. In fact it is good way to make sure roles never exists outside their enclosing context.
+
+#### Content of this example implementation
+- pjdci.core: Contains one interface and two abstract classes used for roles and role players. This is the
+"DCI-implementation"; the rest is convention.
+- pjdci.moneytransfer: Contains an implementation of the well known money transfer example. It isa very simple example
+only meant to give an idea of the syntax and conventions used in this DCI implementation.
+- pjdci.dijkstra: Contains an implementation of the well known Dijkstra Manhattan example. A more involved example used
+to demonstrate the capabilities (and weaknesses) of this DCI implementation.
+
+All packages are accompanied with a set of test cases using the same package structure.
 
 #### Future work
 This example implementation is now presented to the DCI community and I hope for a constructive discussion. The planned
