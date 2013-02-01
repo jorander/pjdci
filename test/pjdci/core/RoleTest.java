@@ -100,6 +100,50 @@ public class RoleTest {
     }
 
     @Test
+    public void roleAndRolePlayerAreEquivalent_CollectionClass() {
+        final RolePlayerExtendingCollectionClass rolePlayer = new RolePlayerExtendingCollectionClass();
+        final Role<RolePlayerExtendingCollectionClass> role = new TestableRoleForCollectionRolePlayer(rolePlayer);
+
+        assertTrue("Role equals role player", role.equals(rolePlayer));
+    }
+
+    @Test
+    public void rolePlayerAndRoleAreEquivalent_CollectionClass() {
+        final RolePlayerExtendingCollectionClass rolePlayer = new RolePlayerExtendingCollectionClass();
+        final Role<RolePlayerExtendingCollectionClass> role = new TestableRoleForCollectionRolePlayer(rolePlayer);
+
+        assertTrue("Role player equals role", rolePlayer.equals(role));
+    }
+
+    @Test
+    public void isPossibleToUseAsKeyInAMap_CollectionClass() {
+        Role<RolePlayerExtendingCollectionClass> instance = new TestableRoleForCollectionRolePlayer(new RolePlayerExtendingCollectionClass());
+        Map<Role<RolePlayerExtendingCollectionClass>, Integer> map = new HashMap<>();
+        map.put(instance, 1);
+        assertNotNull(map.get(instance));
+    }
+
+    @Test
+    public void isPossibleToUseToQueryMapWhereRolePlayerIsUsedAsKey_CollectionClass() {
+        final RolePlayerExtendingCollectionClass rolePlayer = new RolePlayerExtendingCollectionClass();
+        Role<RolePlayerExtendingCollectionClass> role = new TestableRoleForCollectionRolePlayer(rolePlayer);
+        Map<RolePlayerExtendingCollectionClass, Integer> map = new HashMap<>();
+        map.put(rolePlayer, 1);
+
+        assertNotNull(map.get(role));
+    }
+
+    @Test
+    public void isPossibleToUseRolePlayerToQueryMapWhereRoleIsUsedAsKey_CollectionClass() {
+        final RolePlayerExtendingCollectionClass rolePlayer = new RolePlayerExtendingCollectionClass();
+        Role<RolePlayerExtendingCollectionClass> role = new TestableRoleForCollectionRolePlayer(rolePlayer);
+        Map<Role<RolePlayerExtendingCollectionClass>, Integer> map = new HashMap<>();
+        map.put(role, 1);
+
+        assertNotNull(map.get(rolePlayer));
+    }
+
+    @Test
     public void roleAndRolePlayerAreEquivalent_CustomClass() {
         final ValueObject rolePlayer = new ValueObject(1);
         final Role<ValueObject> role = new TestableRole(rolePlayer);
@@ -166,6 +210,12 @@ public class RoleTest {
         }
     }
 
+    private static class TestableRoleForCollectionRolePlayer extends Role<RolePlayerExtendingCollectionClass> {
+        public TestableRoleForCollectionRolePlayer(RolePlayerExtendingCollectionClass rolePlayer) {
+            super(rolePlayer);
+        }
+    }
+
     private static class ValueObject extends AbstractRolePlayer {
         private final Object value;
 
@@ -201,6 +251,26 @@ public class RoleTest {
     }
 
     private static class RolePlayerExtendingBuiltInClass /*extends Object*/ implements RolePlayer {
+        @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+        @Override
+        public boolean equals(Object o) {
+            return AbstractRolePlayer.rolePlayerEquals(this, o);
+        }
+
+        @Override
+        public boolean objectEquals(Object o) {
+            return super.equals(o);
+        }
+    }
+
+    private static class RolePlayerExtendingCollectionClass extends HashMap implements RolePlayer {
+
+        @SuppressWarnings("unchecked")
+        public RolePlayerExtendingCollectionClass() {
+            super();
+            put(Integer.reverse(1), new Object());
+        }
+
         @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
         @Override
         public boolean equals(Object o) {
