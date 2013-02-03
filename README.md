@@ -1,6 +1,6 @@
 # Plain Java DCI (v1.0)
 
-This is an attempt to implement [DCI] http://en.wikipedia.org/wiki/Data,_context_and_interaction in plain Java. This has
+This is an attempt to implement [DCI] (http://en.wikipedia.org/wiki/Data,_context_and_interaction) in plain Java. This has
 been said to be impossible, due to short-comings of the Java language. And indeed, this example implementation contains a few
 unwanted obstacles, and will probably be regarded as not being DCI by some people. Still, I think it shows that many of
 the advantages of DCI can be achieved even in a static, class-oriented, non-meta-programming language, such as Java.
@@ -51,9 +51,9 @@ All packages are accompanied with a set of test cases using the same package str
 #### Future work
 This example implementation is now presented to the DCI community and I hope for a constructive discussion. The planned
 future work is as follows:
-1. Small-grained role contracts.
-2. Extended MoneyTransfer example with other contexts as role players.
-3. Extended MoneyTransfer example with "surrounding" infrastructure code simulating a layered architecture with a front-end
+- Small-grained role contracts.
+- Extended MoneyTransfer example with other contexts as role players.
+- Extended MoneyTransfer example with "surrounding" infrastructure code simulating a layered architecture with a front-end
   and back-end application server.
 
 #### Finally
@@ -61,6 +61,8 @@ Feel happy to clone and play around with the code. If you wish to help, send a p
 email at jorgen dot x dot andersson at gmail dot com or Twitter at se_thinking.
 
 Jörgen Andersson, 2013-02-01
+
+
 ---
 
 #### Java versions
@@ -69,8 +71,8 @@ is Java 7, compliant, but can easily be tailored to Java 6 by adding full type s
 where generic objects are instantiated.
 
 #### Attributions
-This implementation is based on Marc Grue's early work on Scala-based DCI ([Full-OO] http://fullOO.info (2013-01-25)),
-the examples of the [Marvin](http://fulloo.info/Examples/Marvin/Introduction/)DCI language by Rune Funch.and
+This implementation is based on Marc Grue's early work on Scala-based DCI ([Full-OO] (http://fullOO.info) (2013-01-25)),
+the examples of the [Marvin](http://fulloo.info/Examples/Marvin/Introduction/) DCI language by Rune Funch.and
 inspired by the initiated discussions on the [Object-composition](https://groups.google.com/forum/?fromgroups#!forum/object-composition) mailing-list.
 
 #### Disclaimer
