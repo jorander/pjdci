@@ -51,6 +51,9 @@ All packages are accompanied with a set of test cases using the same package str
 #### Future work
 This example implementation is now presented to the DCI community and I hope for a constructive discussion. The planned
 future work is as follows:
+- Extend description of issues from the wrapper approach take. Such as role objects being sent to context-external methods accepting Object
+or non-type specified generic types as parameters without the compiler noticing. Ex "sychronized(x)".
+- Correct description of issues to handle object identity.
 - Small-grained role contracts.
 - Extended MoneyTransfer example with other contexts as role players.
 - Extended MoneyTransfer example with "surrounding" infrastructure code simulating a layered architecture with a front-end
