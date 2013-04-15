@@ -1,13 +1,13 @@
-# Plain Java DCI (v1.0)
+# Plain Java (but not really) DCI (v1.1)
 
-This is an attempt to implement [DCI] (http://en.wikipedia.org/wiki/Data,_context_and_interaction) in plain Java. This has
-been said to be impossible, due to short-comings of the Java language. And indeed, this example implementation contains a few
-unwanted obstacles, and will probably be regarded as not being DCI by some people. Still, I think it shows that many of
-the advantages of DCI can be achieved even in a static, class-oriented, non-meta-programming language, such as Java.
-Advantages that are too valuable to leave un-explored in language with such wide-spread use as Java.
+This project started out as an attempt to implement [DCI] (http://en.wikipedia.org/wiki/Data,_context_and_interaction) in
+plain Java. This had been said to be impossible, due to short-comings of the Java language. And indeed, this example
+implementation contains a few unwanted obstacles, and has been regarded as not being DCI by the community. Still,
+I think it shows that many of the advantages of DCI can be achieved even in a static, class-oriented, non-meta-programming
+language, such as Java. Advantages that are too valuable to leave un-explored in language with such wide-spread use as Java.
 
 #### Advantages
-DCI strives to implement functionality based on the mental model of a use-case. This implementation provides possibility
+DCI strives to implement functionality based on the users mental model. This implementation provides possibility
 to define a context, containing roles, played by pre-existing objects (role players). It is done through wrapping of
 role players. The obvious problems to that approach, regarding object equality and hash codes, are handled by a small
 set of abstract super classes to be used for role and role player objects. In general, frameworks forcing inheritance
@@ -17,13 +17,20 @@ set of abstract super classes to be used for role and role player objects. In ge
 In addition DCI strives to make the implementation of a use-case clear and easy to reason about. It is achieved through
  separating the logic in the use-case from the simple data-model of the system by factoring all code implementing a
  specific use-case into a single context. This provides for no need to walk-through a numerous set of domain classes
- to trace the execution path of a single use-case. This DCI-implementation makes it possible to achieve in plain Java.
+ to trace the execution path of a single use-case. This is a really strong position in the discussion on "use-case centric
+  architecture" that, among others, Robert C Martin (Uncle Bob) has propagated for. In really short terms it means that
+  the use-case implementations should be at the center of the application and clearly distinguishable. They should also
+  be independent of the surroundings, the delivery mechanism, which Uncle Bob happens to call "a detail". To achieve this,
+   it is important not to let any logic, explicit or implicit, leak out of the use-case implementation. This
+   DCI-implementation makes this possible to achieve, in plain Java.
 
 #### Issues
 Since Java, the language, has its set of limitations there are a few issues with this implementation compared to
 implementations in other languages.
 - Object equality must be tested through the well known equals()-method, not by '=='. This is, in my opinion, not a real
-issue since alla Java programmers know that idiom.
+issue since alla Java programmers know that idiom. However, there are certain Java system calls, like synchronized and
+possibly others, that uses '==' for comparison. These calls would see role players and role objects as different objects.
+However, this risk can be mitigated by handling all such calls outside the Context, then only using role player objects.
 - Role player objects need to have a special implementation of the equals()-method, since the DCI-implementation, must
 account for comparisons between role objects and role player objects. This is further described in the documentation of
 the 'RolePlayer' interface and the 'AbstractRolePlayer'.
@@ -36,7 +43,19 @@ extra delegation methods on the role, if needed in the context. Also this is unf
 - In some method calls, certainly all reaching outside the context, the role player type is needed rather than the role.
 In those cases it is necessary to implement a role conversion method, typically "as<Role player type>()" to return the role
 player. This is due to the static typing of Java, and a bit annoying, but easily detected since it is caught by the
-compiler. In fact it is good way to make sure roles never exists outside their enclosing context.
+compiler. In fact it is good way to make sure roles never exists outside their enclosing context. However, in cases where
+a call is made to an external method that accepts Object or non-type specified generic types as parameters a role object
+mapper might sneak out without the compiler noticing. Always be careful when making calls going out from the context.
+
+#### Recommended usage
+This small "framework" (se pjdci.core below) and its conventions is best used to implement use-case centric architectures
+ on top of a simple domain (data) model based on DDD-building blocks:
+- Value Object (Domain object where only the contained data is interesting. All members are used to establish object equality.)
+- Entity (Domain object with an interesting lifecycle and a unique id. The unique id is used to establish object equality.)
+- Repository (Interface that defines a place to persist and retrieve instances of entities.)
+
+This intersection between DDD and DCI (DCI on top of DDD if you wish) is where I find a sweat-spot that I would like
+to explore further. That's what this project is all about.
 
 #### Content of this example implementation
 - pjdci.core: Contains one interface and two abstract classes used for roles and role players. This is the
@@ -51,9 +70,7 @@ All packages are accompanied with a set of test cases using the same package str
 #### Future work
 This example implementation is now presented to the DCI community and I hope for a constructive discussion. The planned
 future work is as follows:
-- Extend description of issues from the wrapper approach take. Such as role objects being sent to context-external methods accepting Object
-or non-type specified generic types as parameters without the compiler noticing. Ex "sychronized(x)".
-- Correct description of issues to handle object identity.
+- Tests that demonstrates issues with handling of object identity.
 - Small-grained role contracts.
 - Extended MoneyTransfer example with other contexts as role players.
 - Extended MoneyTransfer example with "surrounding" infrastructure code simulating a layered architecture with a front-end
@@ -63,7 +80,7 @@ or non-type specified generic types as parameters without the compiler noticing.
 Feel happy to clone and play around with the code. If you wish to help, send a pull request, or contact me on
 email at jorgen dot x dot andersson at gmail dot com or Twitter at se_thinking.
 
-Jörgen Andersson, 2013-02-01
+Jörgen Andersson, 2013-04-15
 
 
 ---
